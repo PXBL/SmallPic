@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="fileInput">   
+    <img id="test" src="">
+    <div id="out">手机： </div>
+    <div id="out1">拍摄方向：</div>
+    <div>1</div>
+</body>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/exif-js"></script> -->
+<!-- <script src="./exif.js"></script> -->
+
+<script type="module">
+    import * as yaSuo from './mobileCompress.js';//以包的形式引入
+    document.getElementById('fileInput')
+    .addEventListener('change',function selectedFileChanged(){
+        console.log(this.files);
+        var option={           
+            maxSize: 2,//最大压缩后尺寸(单位M)
+            sizeRate:1,//按比例缩放尺寸范围(0,1]大于一也可以,为1时为原尺寸不发生变化，最后尺寸为原图尺寸*sizeRate
+            fillBgColor: '#ffffff',//背景色,png图片会转成jpg,不能带透明度,默认颜色为白色
+        }       
+        yaSuo.imageListConvert(this.files,function(e){
+            console.log(e.base64Data.length/1024);
+            console.log(e.fileType);
+            document.getElementById("test").src=e.base64Data;
+            document.getElementById("out").innerHTML="手机： "+e.make;
+            document.getElementById("out1").innerHTML="拍摄方向： "+e.orientation;
+        //     callback({//会收到的回调信息
+        //         base64Data: data,//压缩后的base64格式的图片数据
+        //         fileType: fileType,//压缩后的图片类型
+        //         make:make,//用的什么手机拍摄，很多用苹果手机拍摄的照片会显示是underfind
+        //         orientation:orientation,//拍摄方向，6为手机竖着正常手持手机的方向。值得注意的是很多时候手机上传到的照片方向会显示为1，
+        //那是手机底边朝右侧的拍摄方向，而默认是这样显示，所以电脑端看到图片旋转了90度是正常现象
+        //    });
+    
+        },option);//将上面定义的option入参
+        
+   
+    })
+</script>
+
+
+</html>
